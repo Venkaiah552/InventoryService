@@ -1,6 +1,5 @@
 package com.honeywell;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +14,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.honeywell.dto.InventoryDetails;
 import com.honeywell.jpa.model.Category;
 import com.honeywell.jpa.model.InventoryStore;
 import com.honeywell.jpa.model.Item;
@@ -23,6 +23,7 @@ import com.honeywell.jpa.repository.CategoryRepository;
 import com.honeywell.jpa.repository.InventoryRepository;
 import com.honeywell.jpa.repository.ItemRepository;
 import com.honeywell.jpa.repository.VendorRepository;
+import com.honeywell.service.InventoryService;
 import com.honeywell.util.Size;
 
 @SpringBootApplication
@@ -40,6 +41,10 @@ public class InventoryServiceApplication implements CommandLineRunner {
 
 	@Autowired
 	private InventoryRepository inventoryRepository;
+
+	@Autowired
+	private InventoryService inventoryService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(InventoryServiceApplication.class, args);
 	}
@@ -47,39 +52,51 @@ public class InventoryServiceApplication implements CommandLineRunner {
 	@Override
 	@Transactional
 	public void run(String... strings) throws Exception {
-		Vendor vendor = createVendor();
 		Category category = new Category();
 		category.setName("Dry");
 		category.setPrority("1");
 		categoryRepository.save(category);
-		createItems(1,  vendor.getId(), category);
-		
-		for (Vendor book : vendorRepository.findAll()) {
-			logger.info(book.toString());
-		}
+		Vendor vendor = setUpVendor(category);
 
 		for (int i = 0; i < 10; i++) {
 			InventoryStore inventoryStore = new InventoryStore();
 			inventoryStore.setInventoryDate(new Date());
-			inventoryStore.setItem(findItemByName("Apple"+(i+1)));
+			inventoryStore.setItem(findItemByName("Apple" + (i + 1)));
 			inventoryStore.setVendorDetails(vendor);
 			inventoryStore.setStoreName("Navesh Store");
-			inventoryStore.setQuantityPurchased((i+1)*10);
+			inventoryStore.setQuantityPurchased((i + 1) * 10);
 			inventoryRepository.save(inventoryStore);
 		}
+		Vendor vendor2 = setUpVendor(category);
+
+		for (int i = 0; i < 10; i++) {
+			InventoryStore inventoryStore = new InventoryStore();
+			inventoryStore.setInventoryDate(new Date());
+			inventoryStore.setItem(findItemByName("Apple" + (i + 1)));
+			inventoryStore.setVendorDetails(vendor2);
+			inventoryStore.setStoreName("Navesh Store");
+			inventoryStore.setQuantityPurchased((i + 3) * 10);
+			inventoryRepository.save(inventoryStore);
+		}
+		List<InventoryDetails> details = inventoryService.getInventoryDetails();
+		List<InventoryDetails> details2 = inventoryService.getInventoryDetailsByVendorId(vendor2.getId());
 		System.out.println("Done");
 	}
 
-	private Item findItemByName(String itemName){
+	private Item findItemByName(String itemName) {
 		return itemRepository.findByName(itemName);
 	}
-	private void createItems(int startItem, int vendorId,Category category ) {
+
+	private void createItems(int startItem, int vendorId, Category category) {
 		Set<Item> items = new HashSet();
 		for (int i = startItem; i < (startItem + 11); i++) {
-			Item appleItem = new Item("Apple" + i);
-			appleItem.setPrice(100d*i);
-			appleItem.setSize(Size.SMALL);
-			appleItem.setCategory(category);
+			Item appleItem = itemRepository.findByName("Apple" + i);
+			if (appleItem == null) {
+				appleItem = new Item("Apple" + i);
+				appleItem.setPrice(100d * i);
+				appleItem.setSize(Size.SMALL);
+				appleItem.setCategory(category);
+			}
 			items.add(appleItem);
 		}
 		Vendor vendor = vendorRepository.findById(vendorId).get();
@@ -99,7 +116,10 @@ public class InventoryServiceApplication implements CommandLineRunner {
 		return vendor;
 	}
 
-	private void updateVendor(Vendor vendor) {
-		vendorRepository.save(vendor);
+	private Vendor setUpVendor(Category category) {
+		Vendor vendor = createVendor();
+		createItems(1, vendor.getId(), category);
+
+		return vendor;
 	}
 }

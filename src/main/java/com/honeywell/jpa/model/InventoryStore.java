@@ -23,7 +23,6 @@ public class InventoryStore {
 	private Item item;
 	private int quantityPurchased;
 	private Vendor vendorDetails;
-	@Column(name = "INVENTOTY_DATE", columnDefinition = "DATE DEFAULT CURRENT_DATE")
 	private Date inventoryDate;
 
 	@Id
