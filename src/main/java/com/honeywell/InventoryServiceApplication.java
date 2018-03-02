@@ -32,6 +32,8 @@ public class InventoryServiceApplication implements CommandLineRunner {
 	@Autowired
 	private CategoryRepository categoryRepository;
 
+	@Autowired
+	private CategoryRepository categoryRepository;
 	public static void main(String[] args) {
 		SpringApplication.run(InventoryServiceApplication.class, args);
 	}
@@ -43,6 +45,12 @@ public class InventoryServiceApplication implements CommandLineRunner {
 		Item appleItem = new Item("Apple");
 		appleItem.setPrice(100d);
 		appleItem.setSize(Size.SMALL);
+		
+		Category category = new Category();
+		category.setName("Wet");
+		category.setPrority("1");
+		appleItem.setCategory(category);
+		categoryRepository.save(category);
 		HashSet<Item> items = new HashSet<Item>();
 		items.add(appleItem);
 		Vendor vendor = new Vendor("Navesh", items);

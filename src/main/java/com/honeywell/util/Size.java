@@ -8,4 +8,18 @@ public enum Size {
 		this.value = value;
 	}
 
+	public String getValue() {
+		return value;
+	}
+
+	public static Size parse(String value) {
+		Size right = null; // Default
+		for (Size item : Size.values()) {
+			if (item.getValue() == value) {
+				right = item;
+				break;
+			}
+		}
+		return right;
+	}
 }

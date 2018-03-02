@@ -15,10 +15,11 @@ public class Item {
 	private String name;
 	private Set<Vendor> vendors;
 	@NotNull
-	private Size size;
+	@Column(name = "size")
+    private String size;
 	@NotNull
 	private Double price;
-	@OneToOne
+
 	private Category category;
 
 	public Item() {
@@ -62,11 +63,11 @@ public class Item {
 	}
 
 	public Size getSize() {
-		return size;
+		return Size.parse(this.size);
 	}
 
 	public void setSize(Size size) {
-		this.size = size;
+		this.size = size.getValue();
 	}
 
 	public Double getPrice() {
@@ -77,6 +78,8 @@ public class Item {
 		this.price = price;
 	}
 
+	@ManyToOne
+    @JoinColumn(name = "category_id")
 	public Category getCategory() {
 		return category;
 	}
