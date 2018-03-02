@@ -18,6 +18,8 @@ public class Item {
 	private Size size;
 	@NotNull
 	private Double price;
+	@OneToOne
+	private Category category;
 
 	public Item() {
 
@@ -75,4 +77,11 @@ public class Item {
 		this.price = price;
 	}
 
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
 }
