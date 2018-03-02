@@ -11,8 +11,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.honeywell.jpa.model.Category;
 import com.honeywell.jpa.model.Item;
 import com.honeywell.jpa.model.Vendor;
+import com.honeywell.jpa.repository.CategoryRepository;
 import com.honeywell.jpa.repository.ItemRepository;
 import com.honeywell.jpa.repository.VendorRepository;
 import com.honeywell.util.Size;
@@ -26,6 +28,9 @@ public class InventoryServiceApplication implements CommandLineRunner {
 
 	@Autowired
 	private VendorRepository vendorRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(InventoryServiceApplication.class, args);
