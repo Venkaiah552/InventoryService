@@ -29,9 +29,7 @@ public class InventoryServiceApplication implements CommandLineRunner {
 	@Autowired
 	private VendorRepository vendorRepository;
 	
-	@Autowired
-	private CategoryRepository categoryRepository;
-
+	
 	@Autowired
 	private CategoryRepository categoryRepository;
 	public static void main(String[] args) {
