@@ -31,8 +31,5 @@ public class Category {
 		this.prority = prority;
 	}
 	
-	enum Size{
-		S,M,L,XL,XXL;
-	}
-
+	
 }
